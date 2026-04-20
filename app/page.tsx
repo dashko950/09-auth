@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -9,12 +10,12 @@ export default function Home() {
           Your personal space for organizing thoughts, ideas, and tasks
         </p>
         <div className={styles.ctaButtons}>
-          <a href="/sign-up" className={styles.primaryButton}>
+          <Link href="/sign-up" className={styles.primaryButton}>
             Get Started
-          </a>
-          <a href="/sign-in" className={styles.secondaryButton}>
+          </Link>
+          <Link href="/sign-in" className={styles.secondaryButton}>
             Sign In
-          </a>
+          </Link>
         </div>
       </div>
     </main>

@@ -1,38 +1,45 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
+import { api } from '../../api';
+import { cookies } from 'next/headers';
+import { parse } from 'cookie';
+import { isAxiosError } from 'axios';
+import { logErrorResponse } from '../../_utils/utils';
 
-const API_URL = "https://notehub-api.goit.study";
-
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await req.json();
 
-    const response = await fetch(`${API_URL}/auth/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+    const apiRes = await api.post('auth/register', body);
 
-    const data = await response.json();
+    const cookieStore = await cookies();
+    const setCookie = apiRes.headers['set-cookie'];
 
-    if (!response.ok) {
-      return NextResponse.json(data, { status: response.status });
+    if (setCookie) {
+      const cookieArray = Array.isArray(setCookie) ? setCookie : [setCookie];
+      for (const cookieStr of cookieArray) {
+        const parsed = parse(cookieStr);
+
+        const options = {
+          expires: parsed.Expires ? new Date(parsed.Expires) : undefined,
+          path: parsed.Path,
+          maxAge: Number(parsed['Max-Age']),
+        };
+        if (parsed.accessToken) cookieStore.set('accessToken', parsed.accessToken, options);
+        if (parsed.refreshToken) cookieStore.set('refreshToken', parsed.refreshToken, options);
+      }
+      return NextResponse.json(apiRes.data, { status: apiRes.status });
     }
 
-    // Forward cookies from the external API
-    const setCookieHeader = response.headers.get("set-cookie");
-    const nextResponse = NextResponse.json(data);
-
-    if (setCookieHeader) {
-      nextResponse.headers.set("set-cookie", setCookieHeader);
-    }
-
-    return nextResponse;
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   } catch (error) {
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 },
-    );
+    if (isAxiosError(error)) {
+      logErrorResponse(error.response?.data);
+      return NextResponse.json(
+        { error: error.message, response: error.response?.data },
+        { status: error.status }
+      );
+    }
+    logErrorResponse({ message: (error as Error).message });
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

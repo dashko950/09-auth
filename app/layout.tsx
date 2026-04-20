@@ -1,0 +1,31 @@
+import type { Metadata } from "next";
+import "/app/globals.css";
+import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer/Footer";
+import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
+import AuthProvider from "@/components/AuthProvider/AuthProvider";
+
+export const metadata: Metadata = {
+  title: "NoteHub - Manage Your Notes",
+  description: "A powerful note-taking application with authentication",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body>
+        <TanStackProvider>
+          <AuthProvider>
+            <Header />
+            {children}
+            <Footer />
+          </AuthProvider>
+        </TanStackProvider>
+      </body>
+    </html>
+  );
+}

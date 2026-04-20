@@ -1,0 +1,17 @@
+.footer {
+  background-color: #2d3748;
+  color: white;
+  padding: 2rem;
+  margin-top: auto;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.copyright {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}

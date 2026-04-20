@@ -1,0 +1,59 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formGroup label {
+  font-weight: 500;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.input,
+.textarea {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
+.submitButton {
+  background-color: #667eea;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: #764ba2;
+}
+
+.submitButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
